@@ -11,6 +11,7 @@ library(glmmTMB)    # mixed models
 library(DHARMa)     # diagnostics
 library(emmeans)    # marginal means + contrasts
 library(multcomp)   # cld() for compact letter display
+library(multcompView)# cld() for compact letter display
 
 ## =========================================================
 ## Load and prepare data
