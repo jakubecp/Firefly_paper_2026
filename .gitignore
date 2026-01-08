@@ -1,4 +1,23 @@
-.Rproj.user
+# RStudio / R
+.Rproj.user/
 .Rhistory
 .RData
 .Ruserdata
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+*.bak
+
+# renv (library only, lockfile is committed)
+renv/library/
+renv/staging/
+
+# Cache directories (knitr, rmarkdown)
+*_cache/
+cache/
+
