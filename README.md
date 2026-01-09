@@ -1,6 +1,6 @@
 # Haunted by the light: Effects of street lamps on green ghost firefly *Lamprohiza splendidula*
 
-This repository contains data and R scripts used to analyse the effects of artificial light at night (ALAN) on the courtship behaviour of the green ghost firefly *Lamprohiza splendidula*.
+This repository contains data and R scripts used to analyse the effects of artificial light at night (ALAN) on the courtship behavior of the green ghost firefly *Lamprohiza splendidula*.
 
 The study evaluates the impact of three commonly used street lighting technologies—high-pressure sodium lamps (HPS), warm white LEDs, and biodynamic lamps in PC-amber mode—on male mate-searching activity in both urban and previously unilluminated (“pristine”) habitats. In addition, short-term persistence effects following experimental illumination are assessed.
 
@@ -40,16 +40,6 @@ The datasets consist of pitfall-trap counts of male Lamprohiza splendidula attra
 2025: Experimental introduction of biodynamic lighting into previously dark natural habitats  
 
 Each row represents a sampling unit (typically a trap-night, or—in the 2024 dataset—the content of one trap over a longer sampling interval).
-
-## Statistical analysis overview
-
-Analyses were conducted using generalized linear mixed-effects models (GLMMs):
-
-- Poisson GLMMs with locality as a random intercept
-- Zero inflation assessed using DHARMa
-- Locality-standardized log-response ratios (LRR) for 2024
-- Tukey-adjusted post-hoc contrasts
-- Categorical timing treatments for short-term persistence
 
 ## Software and reproducibility
 
