@@ -54,15 +54,19 @@ treat_cols <- c(
   control = "#0070C0",  # blue (control before + after)
   light   = "#FFC000"   # orange (light treatment)
 )
+data$luxF <- as.factor(data$lux)
+summary(data)
 
+data$abund[data$lux >=0.1 & data$timing== "light"]
 ## =========================================================
 ## Model: male abundance ~ timing
 ## =========================================================
 mod1 <- glmmTMB(
-  abund ~ timing + (1 | locality),
+  abund ~ timing + locality+(1 | trap),
   ziformula = ~1,          # constant zero-inflation
   family = poisson,
-  data = data
+  data = data,
+  
 )
 
 ## =========================================================
@@ -76,6 +80,7 @@ testZeroInflation(sim_res_f)
 ## Model summary and post hoc contrasts
 ## =========================================================
 summary(mod1)
+performance::icc(mod1)
 
 # Pairwise comparisons among timing levels (Tukey-adjusted)
 post_type <- emmeans(mod1, pairwise ~ timing)
@@ -206,3 +211,7 @@ ggsave(
   dpi = 600,
   compression = "lzw"
 )
+ggplot(data = data, aes(x = lux, y = abund, color = timing))+
+  geom_point()
+
+plot_model(mod1, type = "pred", terms = c("timing", "luxF"))

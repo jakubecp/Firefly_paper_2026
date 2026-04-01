@@ -56,7 +56,7 @@ data <- data %>%
 ## =========================================================
 ## Model: LRR ~ lux * type with locality random intercept
 ## =========================================================
-mod1 <- glmmTMB(LRR ~ lux_factor * type + (1 | locality), data = data)
+mod1 <- glmmTMB(LRR ~ lux_factor * type + (1 | locality/side), data = data)
 
 ## --- Diagnostics (keep during development; comment out for final run if desired)
 sim_res <- simulateResiduals(mod1)
