@@ -34,6 +34,53 @@ data <- data %>%
     type       = factor(type)
   )
 
+foton <- tibble(lux = c(0.05,0.1,0.2,0.5,1,2,4,8), 
+                fotonflowHPS = c(0.00065936, 
+                                 0.001318719,
+                                 0.002637439,
+                                 0.006593597,
+                                 0.013187194,
+                                 0.026374387,
+                                 0.052748775,
+                                 0.105497549),
+                fotonflowLED = c (0.000842739,
+                                  0.001685479,
+                                  0.003370957,
+                                  0.008427394,
+                                  0.016854787,
+                                  0.033709574,
+                                  0.067419149,
+                                  0.134838297),
+                
+                fotonflowBiodyn = c (0.0005673,
+                                     0.0011346,
+                                     0.0022692,
+                                     0.005673,
+                                     0.011346,
+                                     0.022692,
+                                     0.045384,
+                                     0.090768
+                                     ))
+
+data$foton[data$lux_f == 0.05] <- foton$fotonflowHPS[1] 
+data$foton[data$lux_f == 0.1] <- foton$fotonflowHPS[2] 
+data$foton[data$lux_f == 0.2] <- foton$fotonflowHPS[3] 
+data$foton[data$lux_f == 0.5] <- foton$fotonflowHPS[4] 
+data$foton[data$lux_f == 1] <- foton$fotonflowHPS[5] 
+data$foton[data$lux_f == 2] <- foton$fotonflowHPS[6] 
+data$fotonS[data$lux_f == 4] <- foton$fotonflowHPS[7] 
+data$foton[data$lux_f == 8] <- foton$fotonflowHPS[8] 
+
+data$fotonHPS[data$lux_f == 0.05] <- foton$fotonflowLED[1] 
+data$fotonHPS[data$lux_f == 0.1] <- foton$fotonflowLED[2] 
+data$fotonHPS[data$lux_f == 0.2] <- foton$fotonflowLED[3] 
+data$fotonHPS[data$lux_f == 0.5] <- foton$fotonflowLED[4] 
+data$fotonHPS[data$lux_f == 1] <- foton$fotonflowLED[5] 
+data$fotonHPS[data$lux_f == 2] <- foton$fotonflowLED[6] 
+data$fotonHPS[data$lux_f == 4] <- foton$fotonflowLED[7] 
+data$fotonHPS[data$lux_f == 8] <- foton$fotonflowLED[8] 
+
+
 ## =========================================================
 ## Compute LRR (log-response ratio) relative to baseline (0.1 lux)
 ## Baseline is computed per locality.

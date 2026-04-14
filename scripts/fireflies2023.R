@@ -33,6 +33,27 @@ data2 <- subset(data, loc != "C")
 data2$row <- factor(data2$row)
 data2$id2 <- factor(paste(data2$loc, data2$row))
 
+foton <- tibble(lux = c(0.05,0.1,0.2,0.5,1,2,4,8), fotonflowHPS = c(0.00065936, 
+                                                                     0.001318719,
+                                                                     0.002637439,
+                                                                     0.006593597,
+                                                                     0.013187194,
+                                                                     0.026374387,
+                                                                     0.052748775,
+                                                                     0.105497549
+                                                                     ))
+
+data2$fotonHPS[data2$lux_f == 0.05] <- foton$fotonflowHPS[1] 
+data2$fotonHPS[data2$lux_f == 0.1] <- foton$fotonflowHPS[2] 
+data2$fotonHPS[data2$lux_f == 0.2] <- foton$fotonflowHPS[3] 
+data2$fotonHPS[data2$lux_f == 0.5] <- foton$fotonflowHPS[4] 
+data2$fotonHPS[data2$lux_f == 1] <- foton$fotonflowHPS[5] 
+data2$fotonHPS[data2$lux_f == 2] <- foton$fotonflowHPS[6] 
+data2$fotonHPS[data2$lux_f == 4] <- foton$fotonflowHPS[7] 
+data2$fotonHPS[data2$lux_f == 8] <- foton$fotonflowHPS[8] 
+
+
+
 # Quick check: total number of males in the analysed subset
 sum(data2$males, na.rm = TRUE)
 
