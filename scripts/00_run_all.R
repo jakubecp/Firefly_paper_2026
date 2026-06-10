@@ -1,3 +1,3 @@
-source("scripts/fireflies2023.R")
-source("scripts/fireflies2024.R")
-source("scripts/biodynamic.R")
+source("scripts/fireflies2023_lux.R")
+source("scripts/fireflies2024_lux.R")
+source("scripts/biodynamic_lux.R")

@@ -58,6 +58,10 @@ data$luxF <- as.factor(data$lux)
 summary(data)
 
 data$abund[data$lux >=0.1 & data$timing== "light"]
+
+
+sum(data$abund, na.rm = TRUE)
+
 ## =========================================================
 ## Model: male abundance ~ timing
 ## =========================================================
@@ -179,10 +183,8 @@ p <- ggplot() +
   ) +
   
   # Theme
-  theme_classic(base_size = 12) +
-  theme(
-    plot.margin = margin(8, 20, 8, 8),
-    legend.position = "none"
+  theme_classic(base_size = 12)+
+  theme(legend.position = "none"
   )
 
 p
@@ -191,19 +193,17 @@ p
 ## Broken y-axis to handle single high outlier
 ## =========================================================
 p <- p +
-  scale_y_break(c(6, 12)) +
-  scale_y_continuous(
-    breaks = c(0, 2, 4, 6, 12, 13),
-    labels = scales::label_number(accuracy = 1)
+  scale_y_break(
+    c(6, 12),
+    ticklabels = c(12, 13),
+    space = 0.1
   )
-
 p
-
 ## =========================================================
 ## Export figure (journal-ready TIFF)
 ## =========================================================
 ggsave(
-  "figures/Fig5.tiff",
+  "figures/Fig6.tiff",
   plot = p,
   width = 7,
   height = 5,
@@ -211,7 +211,4 @@ ggsave(
   dpi = 600,
   compression = "lzw"
 )
-ggplot(data = data, aes(x = lux, y = abund, color = timing))+
-  geom_point()
 
-plot_model(mod1, type = "pred", terms = c("timing", "luxF"))
