@@ -302,8 +302,8 @@ p1 <- ggplot() +
     ))
   ) +
   labs(
-    x = "Illuminance (lux, log scale)",
-    y = "Probability that at least one male found the female"
+    x = "Illuminance (lux)",
+    y = "Probability of success"
   ) +
   theme_bw()
 
@@ -312,10 +312,10 @@ print(p1)
 dir.create("figures", showWarnings = FALSE)
 
 ggsave(
-  "figures/Fig4.tiff",
+  "figures/Fig7.tiff",
   plot = p1,
-  width = 7,
-  height = 5,
+  width = 5,
+  height = 3,
   units = "in",
   dpi = 600,
   compression = "lzw"

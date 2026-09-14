@@ -1,3 +1,38 @@
-source("scripts/fireflies2023_lux.R")
-source("scripts/fireflies2024_lux.R")
-source("scripts/biodynamic_lux.R")
+## =========================================================
+## Run all analyses for the firefly manuscript
+## =========================================================
+
+rm(list = ls())
+
+cat("\n\n",
+    "=========================================================\n",
+    "FIREFLIES 2023\n",
+    "=========================================================\n\n",
+    sep = "")
+
+source("scripts/fireflies2023_lux.R", print.eval = TRUE)
+
+
+cat("\n\n",
+    "=========================================================\n",
+    "FIREFLIES 2024\n",
+    "=========================================================\n\n",
+    sep = "")
+
+source("scripts/fireflies2024_lux.R", print.eval = TRUE)
+
+
+cat("\n\n",
+    "=========================================================\n",
+    "BIODYNAMIC EXPERIMENT 2025\n",
+    "=========================================================\n\n",
+    sep = "")
+
+source("scripts/biodynamic_lux.R", print.eval = TRUE)
+
+
+cat("\n\n",
+    "=========================================================\n",
+    "ALL ANALYSES COMPLETED\n",
+    "=========================================================\n",
+    sep = "")

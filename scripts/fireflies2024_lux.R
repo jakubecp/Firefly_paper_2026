@@ -235,6 +235,7 @@ mod_add <- glmmTMB(
   data = fireflies_model
 )
 
+
 mod_lux_only <- glmmTMB(
   LRR ~ log2_lux + (1 | locality) + (1 | line_id),
   data = fireflies_model
@@ -466,6 +467,9 @@ pred_grid <- pred_grid %>%
 ## - grey open points = 0.1 lx reference observations
 ## - small coloured points = raw observations used in the final model
 ## - large coloured points = population-level predictions from the final model
+## - shape distinguishes lamp type:
+##      LED = circle
+##      HPS = triangle
 ## - vertical lines = 95% confidence intervals
 ## - dashed horizontal line = no change relative to 0.1 lx baseline
 
@@ -492,17 +496,22 @@ p_2024_LRR <- ggplot() +
   ) +
   
   ## Raw observations used in the final model.
+  ## Lamp type differs by BOTH colour and shape.
   geom_point(
     data = fireflies_model,
-    aes(x = lux_factor, y = LRR, colour = type),
+    aes(
+      x = lux_factor,
+      y = LRR,
+      colour = type,
+      shape = type
+    ),
     position = position_jitterdodge(
       jitter.width = 0.12,
       dodge.width = 0.5,
       seed = 1
     ),
     alpha = 0.25,
-    size = 2.0,
-    shape = 16
+    size = 2.0
   ) +
   
   ## Model-based 95% confidence intervals from the final model.
@@ -520,17 +529,18 @@ p_2024_LRR <- ggplot() +
   ) +
   
   ## Model-based predictions from the final model.
+  ## Same type-specific shapes as the raw observations.
   geom_point(
     data = pred_grid,
     aes(
       x = lux_factor,
       y = fit_LRR,
       colour = type,
+      shape = type,
       group = type
     ),
     position = pd,
-    size = 4.2,
-    shape = 16
+    size = 4.2
   ) +
   
   ## Reference line: no change relative to 0.1 lx.
@@ -540,8 +550,19 @@ p_2024_LRR <- ggplot() +
     linewidth = 0.7
   ) +
   
+  ## Lamp colours
   scale_colour_manual(
     values = lamp_cols,
+    breaks = c("LED", "HPS"),
+    name = "Lamp type"
+  ) +
+  
+  ## Lamp shapes
+  scale_shape_manual(
+    values = c(
+      LED = 16,   # filled circle
+      HPS = 17    # filled triangle
+    ),
     breaks = c("LED", "HPS"),
     name = "Lamp type"
   ) +
@@ -573,11 +594,131 @@ print(p_2024_LRR)
 ## =========================================================
 
 ggsave(
-  file.path(out_dir, "Fig5.tiff"),
+  file.path(out_dir, "Fig8.tiff"),
   plot = p_2024_LRR,
-  width = 7,
-  height = 5,
+  width = 5,
+  height = 3,
   units = "in",
   dpi = 600,
   compression = "lzw"
+)
+
+## =========================================================
+## 6b. Export candidate-model comparison table
+## =========================================================
+
+## AIC table
+aic_tab <- AIC(mod_lux_only, mod_add, mod_full)
+
+## Likelihood-ratio tests
+lrt_lux_add <- as.data.frame(
+  anova(mod_lux_only, mod_add)
+)
+
+lrt_add_full <- as.data.frame(
+  anova(mod_add, mod_full)
+)
+
+## ---------------------------------------------------------
+## Construct table
+## Final selected model is shown first
+## ---------------------------------------------------------
+
+model_comparison <- data.frame(
+  
+  Model = c(
+    "Additive (final)",
+    "Interaction",
+    "Illuminance only"
+  ),
+  
+  Fixed_effects = c(
+    "log2(illuminance) + lamp type",
+    "log2(illuminance) × lamp type",
+    "log2(illuminance)"
+  ),
+  
+  Model_df = c(
+    aic_tab["mod_add", "df"],
+    aic_tab["mod_full", "df"],
+    aic_tab["mod_lux_only", "df"]
+  ),
+  
+  AIC = c(
+    aic_tab["mod_add", "AIC"],
+    aic_tab["mod_full", "AIC"],
+    aic_tab["mod_lux_only", "AIC"]
+  ),
+  
+  LRT_comparison = c(
+    "vs. illuminance only",
+    "vs. additive",
+    NA
+  ),
+  
+  Chisq = c(
+    lrt_lux_add$Chisq[2],
+    lrt_add_full$Chisq[2],
+    NA
+  ),
+  
+  LRT_df = c(
+    lrt_lux_add$`Chi Df`[2],
+    lrt_add_full$`Chi Df`[2],
+    NA
+  ),
+  
+  p = c(
+    lrt_lux_add$`Pr(>Chisq)`[2],
+    lrt_add_full$`Pr(>Chisq)`[2],
+    NA
+  )
+)
+
+## Calculate delta AIC relative to the best-supported model
+model_comparison$delta_AIC <-
+  model_comparison$AIC - min(model_comparison$AIC)
+
+## Put columns in publication order
+model_comparison <- model_comparison %>%
+  select(
+    Model,
+    Fixed_effects,
+    Model_df,
+    AIC,
+    delta_AIC,
+    LRT_comparison,
+    Chisq,
+    LRT_df,
+    p
+  )
+
+## ---------------------------------------------------------
+## Publication-formatted version
+## Three decimal places
+## ---------------------------------------------------------
+
+model_comparison_out <- model_comparison %>%
+  mutate(
+    AIC = round(AIC, 3),
+    delta_AIC = round(delta_AIC, 3),
+    Chisq = round(Chisq, 3),
+    p = ifelse(
+      is.na(p),
+      NA,
+      sprintf("%.3f", p)
+    )
+  )
+
+print(model_comparison_out)
+
+## ---------------------------------------------------------
+## Export as CSV
+## ---------------------------------------------------------
+
+write.csv(
+  model_comparison_out,
+  "outputs/model_comparison_LRR_illuminance.csv",
+  row.names = FALSE,
+  fileEncoding = "UTF-8"
 )

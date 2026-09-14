@@ -61,17 +61,25 @@ data$abund[data$lux >=0.1 & data$timing== "light"]
 
 
 sum(data$abund, na.rm = TRUE)
+sum(data$abund[data$timing== "light"], na.rm = TRUE)
+sum(data$abund[data$timing== "control1"], na.rm = TRUE)
+sum(data$abund[data$timing== "control2"], na.rm = TRUE)
+## =========================================================
+## Adding a distance as a factor
+## =========================================================
+data$distance_f <- as.factor(data$distance)
 
 ## =========================================================
 ## Model: male abundance ~ timing
 ## =========================================================
 mod1 <- glmmTMB(
-  abund ~ timing + locality+(1 | trap),
+  abund ~ timing + locality+ (1 | line) +(1 | trap),
   ziformula = ~1,          # constant zero-inflation
   family = poisson,
   data = data,
   
 )
+
 
 ## =========================================================
 ## Model diagnostics
@@ -80,10 +88,12 @@ sim_res_f <- simulateResiduals(mod1)
 plot(sim_res_f)             # residual diagnostics
 testZeroInflation(sim_res_f)
 
+
 ## =========================================================
 ## Model summary and post hoc contrasts
 ## =========================================================
 summary(mod1)
+
 performance::icc(mod1)
 
 # Pairwise comparisons among timing levels (Tukey-adjusted)
@@ -106,6 +116,25 @@ emm_df <- as.data.frame(emm_resp) %>%
     upper = asymp.UCL    # upper 95% CI
   )
 
+
+##Prepare a tabel 3
+coef_tab <- summary(mod1)$coefficients$cond
+
+ci_tab <- data.frame(
+  parameter = rownames(coef_tab),
+  estimate = coef_tab[, "Estimate"],
+  se = coef_tab[, "Std. Error"],
+  lower_95 = coef_tab[, "Estimate"] - 1.96 * coef_tab[, "Std. Error"],
+  upper_95 = coef_tab[, "Estimate"] + 1.96 * coef_tab[, "Std. Error"],
+  z = coef_tab[, "z value"],
+  p = coef_tab[, "Pr(>|z|)"]
+) %>%
+  mutate(
+    across(c(estimate, se, lower_95, upper_95, z), ~ round(.x, 3)),
+    p = ifelse(p < 0.001, "<0.001", sprintf("%.3f", p))
+  )
+
+ci_tab
 ## --- Compact letter display (Tukey-adjusted)
 ## Letters are computed on the link (log) scale,
 ## but can be safely displayed on the response scale
@@ -131,6 +160,14 @@ plot_df <- emm_df %>%
 y_top <- max(c(data$abund, plot_df$upper), na.rm = TRUE)
 
 ## =========================================================
+## Prepare shape grouping
+## =========================================================
+## Distinguish only the illuminated treatment from both controls
+data$shape_grp <- ifelse(data$timing == "light", "light", "control")
+plot_df$shape_grp <- ifelse(plot_df$timing == "light", "light", "control")
+
+
+## =========================================================
 ## Base plot
 ## =========================================================
 p <- ggplot() +
@@ -138,7 +175,12 @@ p <- ggplot() +
   # Raw observations (background texture only)
   geom_jitter(
     data = data,
-    aes(timing, abund, color = treat_col),
+    aes(
+      timing,
+      abund,
+      color = treat_col,
+      shape = shape_grp
+    ),
     width = 0.08, height = 0,
     alpha = 0.12,
     size = 1.6
@@ -147,14 +189,24 @@ p <- ggplot() +
   # Model-based 95% confidence intervals
   geom_linerange(
     data = plot_df,
-    aes(timing, ymin = lower, ymax = upper, color = treat_col),
+    aes(
+      timing,
+      ymin = lower,
+      ymax = upper,
+      color = treat_col
+    ),
     linewidth = 1.2
   ) +
   
   # Model-based means
   geom_point(
     data = plot_df,
-    aes(timing, mean, color = treat_col),
+    aes(
+      timing,
+      mean,
+      color = treat_col,
+      shape = shape_grp
+    ),
     size = 4.2
   ) +
   
@@ -168,7 +220,19 @@ p <- ggplot() +
   ) +
   
   # Colour scale
-  scale_color_manual(values = treat_cols, name = NULL) +
+  scale_color_manual(
+    values = treat_cols,
+    name = NULL
+  ) +
+  
+  # Shape scale: light differs from both controls
+  scale_shape_manual(
+    values = c(
+      control = 16,  # filled circle
+      light   = 17   # filled triangle
+    ),
+    name = NULL
+  ) +
   
   # Initial y-limits (expanded later by axis break)
   coord_cartesian(
@@ -179,15 +243,17 @@ p <- ggplot() +
   # Axis labels
   labs(
     x = "Timing of the experiment",
-    y = "Male abundance (count per trap night)"
+    y = "Abundance (count/trap night)"
   ) +
   
   # Theme
-  theme_classic(base_size = 12)+
-  theme(legend.position = "none"
+  theme_classic(base_size = 12) +
+  theme(
+    legend.position = "none"
   )
 
 p
+
 
 ## =========================================================
 ## Broken y-axis to handle single high outlier
@@ -198,17 +264,19 @@ p <- p +
     ticklabels = c(12, 13),
     space = 0.1
   )
+
 p
+
+
 ## =========================================================
 ## Export figure (journal-ready TIFF)
 ## =========================================================
 ggsave(
-  "figures/Fig6.tiff",
+  "figures/Fig9.tiff",
   plot = p,
-  width = 7,
-  height = 5,
+  width = 5,
+  height = 3,
   units = "in",
   dpi = 600,
   compression = "lzw"
 )
-
