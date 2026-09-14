@@ -1,0 +1,51 @@
+{
+    "title": "Data and R code for: Haunted by the light: Effects of street lighting on the green ghost firefly",
+    "description": "Data and R code supporting the manuscript \"Haunted by the light: Effects of street lighting on the green ghost firefly Lamprohiza splendidula L.\". The repository contains datasets and R analyses for field experiments examining the effects of artificial light at night on courtship-related male activity of the green ghost firefly, Lamprohiza splendidula. The experiments include the 2023 illuminance experiment under high-pressure sodium lighting, the 2024 comparison of high-pressure sodium and warm LED lighting, and the 2025 experimental introduction and removal of biodynamic lighting in PC-Amber mode. Funding: Technology Agency of the Czech Republic, grant SS06010373.",
+    "creators": [
+        {
+            "name": "Novák, Martin",
+            "orcid": "0000-0001-8158-4105",
+            "affiliation": "Faculty of Environmental Sciences, Czech University of Life Sciences Prague"
+        },
+        {
+            "name": "Jakubec, Pavel",
+            "orcid": "0000-0001-7340-5496",
+            "affiliation": "Faculty of Environmental Sciences, Czech University of Life Sciences Prague"
+        },
+        {
+            "name": "Svobodová, Jana",
+            "orcid": "0000-0001-6161-4899",
+            "affiliation": "Faculty of Environmental Sciences, Czech University of Life Sciences Prague"
+        },
+        {
+            "name": "Chajma, Petr",
+            "orcid": "0000-0002-5278-1561",
+            "affiliation": "Faculty of Environmental Sciences, Czech University of Life Sciences Prague"
+        },
+        {
+            "name": "Kadlec, Tomáš",
+            "orcid": "0000-0002-6371-2617",
+            "affiliation": "Faculty of Environmental Sciences, Czech University of Life Sciences Prague"
+        }
+    ],
+    "version": "1.0.0",
+    "upload_type": "dataset",
+    "access_right": "open",
+    "license": "cc-by-4.0",
+    "language": "eng",
+    "keywords": [
+        "artificial light at night",
+        "ALAN",
+        "firefly",
+        "Lampyridae",
+        "Lamprohiza splendidula",
+        "courtship",
+        "light pollution",
+        "street lighting",
+        "illuminance",
+        "LED",
+        "high-pressure sodium",
+        "biodynamic lighting",
+        "R"
+    ]
+}
