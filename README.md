@@ -18,9 +18,9 @@ data/
   fireflies2025.csv   # Biodynamic lamps – pristine habitats
 
 scripts/
-  fireflies2023.R     # Analysis of the 2023 data
-  fireflies2024.R     # Analysis of the 2024 data
-  biodynamic.R        # Analysis of the 2025 data
+  fireflies2023_lux.R     # Analysis of the 2023 data
+  fireflies2024_lux.R     # Analysis of the 2024 data
+  biodynamic_lux.R        # Analysis of the 2025 data
   00_run_all.R        # Master script running the full analysis
 
 figures/
