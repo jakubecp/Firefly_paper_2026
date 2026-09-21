@@ -14,13 +14,22 @@ Faculty of Environmental Sciences, Czech University of Life Sciences Prague
 
 data/
   fireflies2023.csv   # HPS lamps – initial experiment
+  
   fireflies2024.csv   # HPS vs warm LED – main experiment
+  
   fireflies2025.csv   # Biodynamic lamps – pristine habitats
+  
+  weather_hourly.xlsx # hourly weather data for all years Pisel (2023)
+  
+  female_observations_2023.xlsx   # Observations of the females in 2023
 
 scripts/
   fireflies2023_lux.R     # Analysis of the 2023 data
+  
   fireflies2024_lux.R     # Analysis of the 2024 data
+  
   biodynamic_lux.R        # Analysis of the 2025 data
+  
   00_run_all.R        # Master script running the full analysis
 
 figures/
@@ -66,3 +75,7 @@ Archived releases will be deposited with a DOI (e.g. Zenodo).
 
 This work was supported by the Technology Agency of the Czech Republic  
 (grant no. SS06010373).
+
+## References
+
+Pisel T (2023). openmeteo: Retrieve Weather Data from the Open-Meteo API. R package version 0.2.4, https://github.com/cran/openmeteo. (accessed 21 Sep. 2026) 
